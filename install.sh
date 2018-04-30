@@ -21,7 +21,12 @@ esac
 
 # Install required library
 apt update
-apt install -y build-essential bison libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev libreadline-dev libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev autoconf asciidoc xmlto docbook2x make gcc
+apt install -y build-essential bison libyaml-dev libreadline6-dev \
+  zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev libreadline-dev \
+  libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev openssl \
+  libbz2-dev libsqlite3-dev python3-tk tk-dev python-tk libfreetype6-dev \
+  llvm libncursesw5-dev xz-utils autoconf asciidoc xmlto docbook2x make gcc
+
 
 ##################
 # Install Git
