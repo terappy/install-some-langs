@@ -1,4 +1,4 @@
-# linux-auto-language-install
+# install some langs
 Auto installing Node.js, Ruby, Python on Ubuntu.
 
 # How to use?
