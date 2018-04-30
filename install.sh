@@ -15,7 +15,7 @@ OS_FLAG=0
 case "$OS_TYPE" in
   "Ubuntu" ) OS_FLAG=0 ;;
   # "CentOS" ) OS_FLAG=1 ;;
-  * ) echo "error: このOSは対応していません." 1>&2
+  * ) echo "error: Not support this OS." 1>&2
       exit 1 ;;
 esac
 
@@ -32,26 +32,38 @@ echo 'Start installing Git ...'
 echo '############################'
 echo ''
 
-GIT_VERSION=$(curl -sL https://github.com/git/git/releases | sed -nre 's:\s*<span class="tag-name">.*v([0-9]+\.[0-9]+\.[0-9]+)</span>:\1:p' | sort -dr | head -n 1)
-wget https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz
-tar -zxf v${GIT_VERSION}.tar.gz
-cd git-${GIT_VERSION}
-make configure
-./configure --prefix=/usr
-make all doc info
-make install install-doc install-html install-info
+if [ `which git` != '' ]; then
+  echo 'Git is already installed.'
+else
+  GIT_VERSION=$(curl -sL https://github.com/git/git/releases | sed -nre 's:\s*<span class="tag-name">.*v([0-9]+\.[0-9]+\.[0-9]+)</span>:\1:p' | sort -dr | head -n 1)
+  wget https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz
+  tar -zxf v${GIT_VERSION}.tar.gz
+  cd git-${GIT_VERSION}
+  make configure
+  ./configure --prefix=/usr
+  make all doc info
+  make install install-doc install-html install-info
 
-# cleanup
-cd ../
-rm -rf git-${GIT_VERSION}/ v${GIT_VERSION}.tar.gz
-unset GIT_VERSION
+  # cleanup
+  cd ../
+  rm -rf git-${GIT_VERSION}/ v${GIT_VERSION}.tar.gz
+  unset GIT_VERSION
+fi
 
 echo ''
 echo 'Finished installing Git!'
 echo ''
 echo ''
 
+##################
 # Install Node.js
+##################
+echo ''
+echo '############################'
+echo 'Start installing Node.js ...'
+echo '############################'
+echo ''
+
 apt install -y nodejs npm
 npm cache clean
 npm i -g n
@@ -59,6 +71,11 @@ npm i -g n
 n lts
 ln -sh /usr/local/bin/node /usr/bin/node
 apt --purge remove -y nodejs npm
+
+echo ''
+echo 'Finished installing Node.js!'
+echo ''
+echo ''
 
 ##################
 # Install Ruby
