@@ -6,6 +6,6 @@ Auto installing Node.js, Ruby, Python on Ubuntu.
 Please execute command bellow.
 
 ```
-$ git clone https://github.com/terappy/linux-auto-language-install.git
+$ git clone https://github.com/terappy/install-some-langs.git
 $ sudo sh ./linux-auto-language-install/install.sh
 ```
