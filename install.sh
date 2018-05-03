@@ -111,7 +111,8 @@ else
   echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
   echo 'eval "$(rbenv init -)"' >> ~/.bashrc
   # reflect configuration
-  source ~/.bashrc
+  #source ~/.bashrc
+  exec bash
 
   # search for latest version of ruby
   RUBY_VERSION=`rbenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
@@ -152,7 +153,9 @@ else
   echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
 
   # reflect configuration
-  source ~/.bashrc
+  #source ~/.bashrc
+  exec bash
+
 
   # search for latest version of python
   PYTHON_VERSION=`pyenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
