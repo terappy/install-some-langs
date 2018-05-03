@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# It can be only executed by root user
-if [ "`whoami`" != "root" ]; then
-  echo "Require root privilege"
-  exit 1
-fi
+## It can be only executed by root user
+#if [ "`whoami`" != "root" ]; then
+#  echo "Require root privilege"
+#  exit 1
+#fi
 
 # Check OS type
 OS_TYPE=$(lsb_release -i | sed 's/.*\s\(.*\)$/\1/')
@@ -26,8 +26,8 @@ echo 'Start installing required library ...'
 echo '############################'
 echo ''
 
-apt update
-apt install -y build-essential bison libyaml-dev libreadline6-dev \
+sudo apt update
+sudo apt install -y build-essential bison libyaml-dev libreadline6-dev \
   zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev libreadline-dev \
   libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev openssl \
   libbz2-dev libsqlite3-dev python3-tk tk-dev python-tk libfreetype6-dev \
@@ -78,13 +78,13 @@ echo ''
 if [ `which node` != '' ]; then
   echo 'Node.js is already installed.'
 else
-  apt install -y nodejs npm
-  npm cache clean
-  npm i -g n
+  sudo apt install -y nodejs npm
+  sudo npm cache clean
+  sudo npm i -g n
 
-  n lts
-  ln -sh /usr/local/bin/node /usr/bin/node
-  apt --purge remove -y nodejs npm
+  sudo n lts
+  sudo ln -sh /usr/local/bin/node /usr/bin/node
+  sudo apt --purge remove -y nodejs npm
 fi
 
 echo ''
@@ -111,7 +111,7 @@ else
   echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
   echo 'eval "$(rbenv init -)"' >> ~/.bashrc
   # reflect configuration
-  bash ~/.bashrc
+  source ~/.bashrc
 
   # search for latest version of ruby
   RUBY_VERSION=`rbenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
@@ -147,12 +147,12 @@ else
 
   # write configuration to .bashrc
   echo 'export PYENV_ROOT=$HOME/.pyenv' >> ~/.bashrc
-  echo 'eval "$(pyenv init -)"' >> ~/.bashrc
   echo 'export PATH=$PYENV_ROOT/bin:$PATH' >> ~/.bashrc
+  echo 'eval "$(pyenv init -)"' >> ~/.bashrc
   echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
 
   # reflect configuration
-  bash ~/.bashrc
+  source ~/.bashrc
 
   # search for latest version of python
   PYTHON_VERSION=`pyenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
