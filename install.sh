@@ -20,6 +20,12 @@ case "$OS_TYPE" in
 esac
 
 # Install required library
+echo ''
+echo '############################'
+echo 'Start installing required library ...'
+echo '############################'
+echo ''
+
 apt update
 apt install -y build-essential bison libyaml-dev libreadline6-dev \
   zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev libreadline-dev \
@@ -69,13 +75,17 @@ echo 'Start installing Node.js ...'
 echo '############################'
 echo ''
 
-apt install -y nodejs npm
-npm cache clean
-npm i -g n
+if [ `which node` != '' ]; then
+  echo 'Node.js is already installed.'
+else
+  apt install -y nodejs npm
+  npm cache clean
+  npm i -g n
 
-n lts
-ln -sh /usr/local/bin/node /usr/bin/node
-apt --purge remove -y nodejs npm
+  n lts
+  ln -sh /usr/local/bin/node /usr/bin/node
+  apt --purge remove -y nodejs npm
+fi
 
 echo ''
 echo 'Finished installing Node.js!'
@@ -91,25 +101,28 @@ echo 'Start installing Ruby ...'
 echo '############################'
 echo ''
 
-git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
-git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+if [ `which rbenv` != '' ]; then
+  echo 'Ruby is already installed.'
+else
+  git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+  git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 
-# write configuration to .bashrc
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-# reflect configuration
-source ~/.bashrc
+  # write configuration to .bashrc
+  echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+  echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+  # reflect configuration
+  bash ~/.bashrc
 
-# search for latest version of ruby
-RUBY_VERSION=`rbenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
+  # search for latest version of ruby
+  RUBY_VERSION=`rbenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
 
-# install ruby by rbenv
-rbenv install ${RUBY_VERSION}
-rbenv global ${RUBY_VERSION}
+  # install ruby by rbenv
+  rbenv install ${RUBY_VERSION}
+  rbenv global ${RUBY_VERSION}
 
-# cleanup
-unset RUBY_VERSION
-
+  # cleanup
+  unset RUBY_VERSION
+fi
 
 echo ''
 echo 'Finished installing Ruby!'
@@ -126,28 +139,31 @@ echo 'Start installing Python ...'
 echo '############################'
 echo ''
 
-git clone https://github.com/yyuu/pyenv.git ~/.pyenv
-git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+if [ `which pyenv` != '' ]; then
+  echo 'Python is already installed.'
+else
+  git clone https://github.com/yyuu/pyenv.git ~/.pyenv
+  git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
 
-# write configuration to .bashrc
-echo 'export PYENV_ROOT=$HOME/.pyenv' >> ~/.bashrc
-echo 'export PATH=$PYENV_ROOT/bin:$PATH' >> ~/.bashrc
-echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+  # write configuration to .bashrc
+  echo 'export PYENV_ROOT=$HOME/.pyenv' >> ~/.bashrc
+  echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+  echo 'export PATH=$PYENV_ROOT/bin:$PATH' >> ~/.bashrc
+  echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
 
-# reflect configuration
-source ~/.bashrc
+  # reflect configuration
+  bash ~/.bashrc
 
-# search for latest version of python
-PYTHON_VERSION=`pyenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
+  # search for latest version of python
+  PYTHON_VERSION=`pyenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
 
-# install python by pyenv
-pyenv install ${PYTHON_VERSION}
-pyenv global ${PYTHON_VERSION}
+  # install python by pyenv
+  pyenv install ${PYTHON_VERSION}
+  pyenv global ${PYTHON_VERSION}
 
-# cleanup
-unset PYTHON_VERSION
-
+  # cleanup
+  unset PYTHON_VERSION
+fi
 
 echo ''
 echo 'Finished installing Python!'
