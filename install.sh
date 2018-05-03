@@ -43,7 +43,7 @@ echo 'Start installing Git ...'
 echo '############################'
 echo ''
 
-if [ `which git` != '' ]; then
+if [ `which git` != "" ]; then
   echo 'Git is already installed.'
 else
   GIT_VERSION=$(curl -sL https://github.com/git/git/releases | sed -nre 's:\s*<span class="tag-name">.*v([0-9]+\.[0-9]+\.[0-9]+)</span>:\1:p' | sort -dr | head -n 1)
@@ -75,7 +75,7 @@ echo 'Start installing Node.js ...'
 echo '############################'
 echo ''
 
-if [ `which node` != '' ]; then
+if [ `which node` != "" ]; then
   echo 'Node.js is already installed.'
 else
   sudo apt install -y nodejs npm
@@ -101,7 +101,7 @@ echo 'Start installing Ruby ...'
 echo '############################'
 echo ''
 
-if [ `which rbenv` != '' ]; then
+if [ `which rbenv` != "" ]; then
   echo 'Ruby is already installed.'
 else
   git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
@@ -140,7 +140,7 @@ echo 'Start installing Python ...'
 echo '############################'
 echo ''
 
-if [ `which pyenv` != '' ]; then
+if [ `which pyenv` != "" ]; then
   echo 'Python is already installed.'
 else
   git clone https://github.com/yyuu/pyenv.git ~/.pyenv
