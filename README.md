@@ -6,7 +6,7 @@ Auto installing Node.js, Ruby, Python on Ubuntu.
 Please execute commands as followings.
 
 ```
-$ sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/terappy/install-some-langs/master/install.sh)"
+$ sh -c "$(curl -fsSL https://raw.githubusercontent.com/terappy/install-some-langs/master/install.sh)"
 ```
 
 or
