@@ -171,10 +171,11 @@ fi
 echo ''
 echo 'Finished installing Python!'
 echo ''
-echo ''
 
 # cleanup
 unset OS_TYPE
 unset OS_FLAG
 
 echo 'All Done!!!!!!!!'
+
+exit 0
