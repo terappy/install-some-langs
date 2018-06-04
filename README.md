@@ -1,6 +1,14 @@
 # install some langs
 Auto installing Node.js, Ruby, Python on Ubuntu.
 
+# Requirement
+
+- curl
+
+```
+$ sudo apt install curl
+```
+
 # How to use?
 
 Please execute commands as followings.
