@@ -7,12 +7,13 @@
 #fi
 
 # Check OS type
-OS_TYPE=$(lsb_release -i | sed 's/.*\s\(.*\)$/\1/')
+DIST_TYPE=$(lsb_release -i | sed 's/.*\s\(.*\)$/\1/')
+DIST_VER=$(lsb_release -r | sed 's/.*\s\(.*\)\.\(.*\)$/\1/')
 
 # Ubuntu: 0
 # CentOS: 1
 OS_FLAG=0
-case "$OS_TYPE" in
+case "$DIST_TYPE" in
   "Ubuntu" ) OS_FLAG=0 ;;
   # "CentOS" ) OS_FLAG=1 ;;
   * ) echo "error: Not support this OS." 1>&2
@@ -46,19 +47,21 @@ echo ''
 if [ " `which git`" != " " ]; then
   echo 'Git is already installed.'
 else
-  GIT_VERSION=$(curl -sL https://github.com/git/git/releases | sed -nre 's:\s*<span class="tag-name">.*v([0-9]+\.[0-9]+\.[0-9]+)</span>:\1:p' | sort -dr | head -n 1)
-  wget https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz
-  tar -zxf v${GIT_VERSION}.tar.gz
-  cd git-${GIT_VERSION}
-  make configure
-  ./configure --prefix=/usr
-  make all doc info
-  make install install-doc install-html install-info
+#  GIT_VERSION=$(curl -sL https://github.com/git/git/releases | sed -nre 's:\s*<span class="tag-name">.*v([0-9]+\.[0-9]+\.[0-9]+)</span>:\1:p' | sort -dr | head -n 1)
+#  wget https://github.com/git/git/archive/v${GIT_VERSION}.tar.gz
+#  tar -zxf v${GIT_VERSION}.tar.gz
+#  cd git-${GIT_VERSION}
+#  make configure
+#  ./configure --prefix=/usr
+#  make all doc info
+#  make install install-doc install-html install-info
+#
+#  # cleanup
+#  cd ../
+#  rm -rf git-${GIT_VERSION}/ v${GIT_VERSION}.tar.gz
+#  unset GIT_VERSION
 
-  # cleanup
-  cd ../
-  rm -rf git-${GIT_VERSION}/ v${GIT_VERSION}.tar.gz
-  unset GIT_VERSION
+  sudo apt install git
 fi
 
 echo ''
@@ -83,8 +86,13 @@ else
   sudo npm i -g n
 
   sudo n lts
-  sudo ln -sh /usr/local/bin/node /usr/bin/node
-  sudo apt --purge remove -y nodejs npm
+  sudo ln -s /usr/local/bin/node /usr/bin/node
+  if [ $DISTVER -lt 18 ] ; then
+    # when ubuntu version is less than 18.xx
+    sudo apt --purge remove -y nodejs npm
+  else
+    sudo apt autoremove -y nodejs npm
+  fi
 fi
 
 echo ''
@@ -104,15 +112,29 @@ echo ''
 if [ " `which rbenv`" != " " ]; then
   echo 'Ruby is already installed.'
 else
-  git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
-  git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+  RBENV_PATH='~/.rbenv'
+  RBBUILD_PATH="${RBENV_PATH}/plugins/ruby-build"
+  if [ ! -e $RBENV_PATH ] ; then
+    git clone https://github.com/sstephenson/rbenv.git RBENV_PATH
+  fi
+  if [ ! -e $RBBUILD_PATH ] ; then
+    git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+  fi
 
   # write configuration to .bashrc
   echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
   echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+  
   # reflect configuration
   #source ~/.bashrc
-  bash ~/.bashrc
+#   if [ $DIST_VER -lt 18 ] ; then
+#     # when ubuntu version is less than 18.xx
+#     bash ~/.bashrc
+#   else
+#     exec $SHELL -l
+#   fi
+  exec $SHELL -l
+
 
   # search for latest version of ruby
   RUBY_VERSION=`rbenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
@@ -123,6 +145,8 @@ else
 
   # cleanup
   unset RUBY_VERSION
+  unset RBENV_PATH
+  unset RBBUILD_PATH
 fi
 
 echo ''
@@ -143,8 +167,14 @@ echo ''
 if [ " `which pyenv`" != " " ]; then
   echo 'Python is already installed.'
 else
-  git clone https://github.com/yyuu/pyenv.git ~/.pyenv
-  git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+  PYENV_PATH='~/.rbenv'
+  VENV_PATH="${PYENV_PATH}plugins/pyenv-virtualenv"
+  if [ ! -e $PYENV_PATH ] ; then
+    git clone https://github.com/yyuu/pyenv.git ~/.pyenv
+  fi
+  if [ ! -e $VENV_PATH ] ; then
+    git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+  fi
 
   # write configuration to .bashrc
   echo 'export PYENV_ROOT=$HOME/.pyenv' >> ~/.bashrc
@@ -154,8 +184,13 @@ else
 
   # reflect configuration
   #source ~/.bashrc
-  bash ~/.bashrc
-
+#   if [ $DIST_VER -lt 18 ] ; then
+#     # when ubuntu version is less than 18.xx
+#     bash ~/.bashrc
+#   else
+#     exec $SHELL -l
+#   fi
+  exec $SHELL -l
 
   # search for latest version of python
   PYTHON_VERSION=`pyenv install -l | grep '\s[0-9]\+\.[0-9]\+\.[0-9]\+$' | tail -n 1 | sed 's/\s//g'`
@@ -166,6 +201,8 @@ else
 
   # cleanup
   unset PYTHON_VERSION
+  unset PYENV_PATH
+  unset VENV_PATH
 fi
 
 echo ''
@@ -173,7 +210,8 @@ echo 'Finished installing Python!'
 echo ''
 
 # cleanup
-unset OS_TYPE
+unset DIST_TYPE
+unset DIST_VER
 unset OS_FLAG
 
 echo 'All Done!!!!!!!!'
